@@ -1,0 +1,31 @@
+#!/sbin/openrc-run
+
+description="NFS Automounter"
+
+command="/usr/local/bin/mount_nfs.sh"
+command_background="yes"
+
+depend() {
+    need net
+    use logger
+    after firewall
+}
+
+start_pre() {
+    if [ ! -x "$command" ]; then
+        eerror "Executable not found: $command"
+        return 1
+    fi
+}
+
+start() {
+    ebegin "Starting NFS Automounter"
+    start-stop-daemon --start --background --exec $command
+    eend $?
+}
+
+stop() {
+    ebegin "Stopping NFS Automounter"
+    start-stop-daemon --stop --exec $command
+    eend $?
+}

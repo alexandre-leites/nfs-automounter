@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 LOGFILE="/var/log/mount_nfs.log"
 
@@ -34,12 +34,13 @@ while true; do
     current_mounts_before=$(count_current_mounts)
     log_message "Currently mounted filesystems: $current_mounts_before"
 
-    any_failed_mount=false
+    any_failed_mount=0
 
     while read -r line; do
         # Skip comments and empty lines
-        [[ "$line" =~ ^#.*$ ]] && continue
-        [[ -z "$line" ]] && continue
+        case "$line" in
+            \#*|'') continue ;;
+        esac
 
         # Get the details from /etc/fstab
         server=$(echo "$line" | awk '{print $1}')
@@ -50,7 +51,7 @@ while true; do
         hostname=$(echo "$server" | cut -d: -f1)
 
         # Only process NFS entries
-        if [[ "$fstype" == "nfs" || "$fstype" == "nfs4" ]]; then
+        if [ "$fstype" = "nfs" ] || [ "$fstype" = "nfs4" ]; then
             if ! mount | grep -q " on $mountpoint type "; then
                 log_message "Trying to mount: $mountpoint"
 
@@ -60,11 +61,11 @@ while true; do
                         log_message "Mounted: $mountpoint"
                     else
                         log_message "Failed to mount: $mountpoint"
-                        any_failed_mount=true
+                        any_failed_mount=1
                     fi
                 else
                     log_message "Server not reachable: $hostname"
-                    any_failed_mount=true
+                    any_failed_mount=1
                 fi
 
             fi
@@ -76,7 +77,7 @@ while true; do
     log_message "Mounted filesystems after execution: $current_mounts_after"
 
     # Adjust sleep time based on mount status
-    if [[ $any_failed_mount == true ]]; then
+    if [ $any_failed_mount -eq 1 ]; then
         sleep_time=10
     else
         sleep_time=60

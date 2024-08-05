@@ -16,33 +16,47 @@ While not a perfect solution, it has proven effective.
 
 ## Installation
 
-1. **Clone the Repository:**
+To install the NFS Automounter service on your target machine, follow the steps below:
 
-   Clone the repository to any Unix machine (e.g., your local machine or a host server) using the following command:
-   ```sh
-   git clone <repository-url>
-   ```
+1. **Login via SSH**:
 
-2. **Set Permissions:**
+   Use your preferred SSH client to log in to the desired target machine.
+   
+   Replace `user` and `hostname` with your actual username and the machine's hostname or IP address.
 
-   Grant execution permission to the setup script:
-   ```sh
-   chmod +x installer.sh
-   ```
+    ```sh
+    ssh user@hostname
+    ```
 
-3. **Run the Installer:**
+2. **Run the Installer Script**:
 
-   To install the daemon on the target system, execute the following command:
-   ```sh
-   sudo ./installer.sh -h <hostname> [-p <port>] [-u <username>] -P <password>
-   ```
-   * -h `<hostname>`: Specify the hostname of the target machine.
-   * -p `<port>` (optional): Specify the port number (default is usually 22 for SSH).
-   * -u `<username>`: Specify the username for the target machine.
-   * -P `<password>`: Specify the password for the target machine.
+   Use `wget` to download the installer script and pipe it to `sudo sh` to execute the script with superuser privileges.
+   
+   This command will download and run the script in one step.
 
-Replace `<repository-url>`, `<hostname>`, `<port>`, `<username>`, and `<password>` with the appropriate values for your setup.
+    ```sh
+    wget -qO- https://raw.githubusercontent.com/alexandre-leites/nfs-automounter/main/installer.sh | sudo sh
+    ```
 
+## Uninstallation
+
+If you need to uninstall the NFS Automounter service, follow these steps:
+
+1. **Login via SSH**:
+
+   Use your preferred SSH client to log in to the desired target machine.
+
+    ```sh
+    ssh user@hostname
+    ```
+
+2. **Run the Uninstaller Script**:
+
+   Use `wget` to download the installer script and pipe it to `sudo sh` with the `-u` flag to execute the uninstallation process.
+
+    ```sh
+    wget -qO- https://raw.githubusercontent.com/alexandre-leites/nfs-automounter/main/installer.sh | sudo sh -s -u
+    ```
 
 ## Future Improvements
 - Implement log rotation
