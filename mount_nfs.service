@@ -3,7 +3,8 @@ Description=Mount NFS drives from fstab
 After=network.target
 
 [Service]
-ExecStart=/opt/automounter/mount_nfs.sh
+Type=simple
+ExecStart=/usr/local/bin/mount_nfs.sh
 Restart=always
 StandardOutput=syslog
 StandardError=syslog
@@ -12,4 +13,3 @@ User=root
 
 [Install]
 WantedBy=multi-user.target
-
